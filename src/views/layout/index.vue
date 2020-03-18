@@ -1,5 +1,8 @@
 <template>
-<div>我是大哥</div>
+<div>
+
+    <h1 style="text-align:center;margin:200px auto">亲爱哒</h1>
+</div>
 </template>
 
 <script>
