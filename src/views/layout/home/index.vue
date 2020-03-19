@@ -3,7 +3,8 @@
     <van-tabs>
       <van-tab v-for="item in channels" :key="item.id" :title="item.name">
         <!-- 这里是自己定义的一个新组建  因为这个组件里面是文章的列表 -->
-        <articleList></articleList>
+        <!-- 用父组件给子组件传值的方式给子组件把id传过去 因为子组件发送请求需要id -->
+        <articleList :channel_id='item.id'></articleList>
       </van-tab>
     </van-tabs>
     <div class="bar_btn">

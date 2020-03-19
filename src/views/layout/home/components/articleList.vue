@@ -27,7 +27,35 @@
 </template>
 
 <script>
-export default {}
+import { getArticleList } from '@/api/articleList' // 引入获取文章列表的axios的请求
+export default {
+  // 父组件给子组件把channel_id传过来了  需要用props接收一下
+  props: {
+    channel_id: { // 之前学过的props传值 可以是数组  ['channel_id']这样的形式
+      required: true, // 现在可以用对象的方式  另外可以对当前传过来的值 进行配置项的设置
+      type: Number,
+      default: null // 默认值是null
+    }
+  },
+  data () {
+    return {
+      timestamp: null
+    }
+  },
+  methods: {
+    async getArticleList () {
+      const res = await getArticleList({
+        channel_id: this.channel_id, // 这个是频道的id
+        timestamp: this.timestamp || Date.now() // 判断如果时间戳存在就使用当前的时间戳 如果时间戳不存在  比如说第一次点击频道的id  就需要把当前的时间戳赋值给 timestamp
+      })
+      console.log(res.results)
+    }
+  },
+  // 实例创建完就执行函数
+  created () {
+    this.getArticleList()
+  }
+}
 </script>
 
 <style lang='less' scoped>
