@@ -1,22 +1,24 @@
 <template>
   <div class="scroll-wrapper">
-    <van-list>
-      <div class="article_item">
-        <h3 class="van-ellipsis">PullRefresh下拉刷新PullRefresh下拉刷新下拉刷新下拉刷新</h3>
+    <van-list v-model="upLoading" :finished="finished" :finished-text="finishedText" @load="getArticleList">
+      <div class="article_item" v-for="item in articleList" :key="item.art_id.toString()">
+        <h3 class="van-ellipsis">{{item.title}}</h3>
         <!-- 三图 -->
-        <div class="img_box">
-          <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-          <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-          <van-image class="w33" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
+        <!-- 如果type===3 就显示 不等于3就隐藏 -->
+        <div class="img_box" v-if="item.cover.type===3">
+          <van-image class="w33" fit="cover" :src="item.cover.images[0]" />
+          <van-image class="w33" fit="cover" :src="item.cover.images[1]" />
+          <van-image class="w33" fit="cover" :src="item.cover.images[2]" />
         </div>
         <!-- 单图 -->
-        <!-- <div class="img_box">
-          <van-image class="w100" fit="cover" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-        </div> -->
+          <!-- 如果type===1 就显示 不等于1就隐藏 -->
+        <div class="img_box"  v-if="item.cover.type===1">
+          <van-image class="w100" fit="cover" :src="item.cover.images[0]" />
+        </div>
         <div class="info_box">
-          <span>你像一阵风</span>
-          <span>8评论</span>
-          <span>10分钟前</span>
+          <span>{{item.aut_name}}</span>
+          <span>{{item.comm_count}}</span>
+          <span>{{item.pubdate}}</span>
           <span class="close">
             <van-icon name="cross"></van-icon>
           </span>
@@ -39,7 +41,11 @@ export default {
   },
   data () {
     return {
-      timestamp: null
+      timestamp: null, // 设置时间戳是null
+      upLoading: false, // 初始化页面的时候 upLoading会自动触发一次true 需要自己手动改成false
+      finished: false, // false代表没有加载完  true代表加载结束 没数据啦
+      finishedText: '', // 加载结束之后显示的文本内容
+      articleList: [] // 定义一个空数组 用来接收 发送axios之后请求回来的数据
     }
   },
   methods: {
@@ -48,12 +54,16 @@ export default {
         channel_id: this.channel_id, // 这个是频道的id
         timestamp: this.timestamp || Date.now() // 判断如果时间戳存在就使用当前的时间戳 如果时间戳不存在  比如说第一次点击频道的id  就需要把当前的时间戳赋值给 timestamp
       })
-      console.log(res.results)
+      console.log(res)
+      this.articleList.push(...res.results) // 这里用到...  是因为如果直接把获取的数据给替代了  会把之前的数据给替代了  ...则是把下一次获取到的数据添加到数据的后面
+      this.upLoading = false // load执行是因为滚动条到底部的距离小于默认值 只要一小于 就会自动改成true  需要手动改成false
+      if (res.pre_timestamp) { // 判断当前的获取到的数据是否有时间戳
+        this.timestamp = res.pre_timestamp // 有的话  就把获取到的时间戳给了timestamp  只要offset一变化 他就会带着新的时间戳去发送请求
+      } else { // 如果没有时间戳  说明没有东西可加载  finished==true
+        this.finished = true
+        this.finishedText = '无内容可加载'
+      }
     }
-  },
-  // 实例创建完就执行函数
-  created () {
-    this.getArticleList()
   }
 }
 </script>

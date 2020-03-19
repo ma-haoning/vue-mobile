@@ -61,13 +61,14 @@ export default {
       height: 2px;
     }
   }
-  /deep/ .van-tabs__content {
+  /deep/ .van-tabs__content{
     flex: 1;
     overflow: hidden;
+    padding: 0 20px;
   }
-  /deep/ .van-tab__pane {
+  /deep/ .van-tab__pane{
     height: 100%;
-    .scroll-wrapper {
+    .scroll-wrapper{
       height: 100%;
       overflow-y: auto;
     }
