@@ -23,12 +23,14 @@
 </template>
 
 <script>
+import { login } from '@/api/user'// 引入login的登录请求
+import { mapMutations } from 'vuex' // 从vuex中引入mapMutations方法 改变共享的状态  需要mutations
 export default {
   data () {
     return {
       loginForm: {
-        mobile: '', // 手机号
-        code: ''// 密码
+        mobile: '13911111111', // 手机号
+        code: '246810'// 密码
       },
       validateError: {
         mobile: '', // 校验手机号错误的信息
@@ -37,6 +39,8 @@ export default {
     }
   },
   methods: {
+    // 引入mutation的方法
+    ...mapMutations(['updateUser']),
     // 校验手机号
     validateMible () {
       if (!this.loginForm.mobile) {
@@ -65,11 +69,23 @@ export default {
       return true // true 验证校验成功
     },
     // 登录按钮
-    login () {
+    async login () {
       const valiMobile = this.validateMible()
       const valiCode = this.validateCode()
       if (valiMobile && valiCode) { // 当前的valiMobile和valiCode是存在的  才会就去分支
         // console.log('手动校验')
+        // 调用从api下面传过来login方法
+        try {
+          // alert(1)
+          const res = await login(this.loginForm)
+          console.log(res)
+          this.updateUser({ user: res })
+          const { redirectUrl } = this.$route.query // query查询参数 也就是 ?后边的参数表
+          // redirectUrl有值的话 跳到该地址 没值的话 跳到 主页
+          this.$router.push(redirectUrl || '/') // 短路表达式
+        } catch (error) {
+          this.$notify({ message: '用户名或者验证码错误', duration: 800 })
+        }
       }
     }
   }

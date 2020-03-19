@@ -16,8 +16,11 @@ const instance = axios.create({ // 创建一个axios的实例
 instance.interceptors.request.use(function (config) {
   if (store.state.user.token) {
     config.headers.Authorization = `Bearer ${store.state.user.token}` // 将token 统一注入到headers中
-    return config// 必须有retun
   }
+  // 如果这里第一次登录没有token的话 也是需要返回值的 刚才的错误在于发送请求之前的拦截器没有return
+  // 应该是当有token的时候设置config  当没有token的时候  不需要设置config 只需要默认的config
+  // 必须有return
+  return config// 必须有retun
 }, function (error) {
   return Promise.reject(error)
 })
