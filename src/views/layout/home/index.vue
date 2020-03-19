@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <van-tabs>
-      <van-tab v-for="item in 10" :key="item" :title="`标签${item}`">
+      <van-tab v-for="item in channels" :key="item.id" :title="item.name">
         <!-- 这里是自己定义的一个新组建  因为这个组件里面是文章的列表 -->
         <articleList></articleList>
       </van-tab>
@@ -14,11 +14,32 @@
 </template>
 
 <script>
+import { getChannels } from '@/api/channel' // 引入获取用户频道列表的axios的请求
 import articleList from './components/articleList'
 export default {
   name: 'home', // devtools查看组件时  可以看到 对应的name名称
   components: {
     articleList
+  },
+  data () {
+    return {
+      // 设置一个空数组 当请求发送成功之后  把从后台获取到的数据给了当前的channels
+      channels: []
+    }
+  },
+  methods: {
+    // 下面的getChannels是本实例下的方法 和引入的sxios请求没干系
+    async getChannels () {
+      // 用异步函数来执行同步代码
+      const res = await getChannels()
+      console.log(res)
+      this.channels = res.channels
+    }
+  },
+  // 钩子函数
+  created () {
+    // 实例化vue之后就运行下面的函数
+    this.getChannels()
   }
 }
 </script>
