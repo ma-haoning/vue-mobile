@@ -5,7 +5,7 @@ export function setUser (user) { // 这个是设置token 以user_prove为名字�
 
 export function getUser () { // 这个是获取token 需要parse转换一下
   // ||的意思表示前面是true 就用前面的数据 前面为false则用后面的数据
-  return JSON.parse(window.localStorage.getItem('user_prove') || {})
+  return JSON.parse(window.localStorage.getItem('user_prove') || '{}') // { }需要加引号
 }
 
 export function delUser () { // 删除token的函数
