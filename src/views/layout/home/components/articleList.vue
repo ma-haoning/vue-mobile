@@ -55,6 +55,7 @@ export default {
   methods: {
     // 上拉加载
     async getArticleList () {
+      await this.$sleep() // 同步代码  定时器500ms之后执行下面的
       const res = await getArticleList({
         channel_id: this.channel_id, // 这个是频道的id
         timestamp: this.timestamp || Date.now() // 判断如果时间戳存在就使用当前的时间戳 如果时间戳不存在  比如说第一次点击频道的id  就需要把当前的时间戳赋值给 timestamp
@@ -71,12 +72,13 @@ export default {
     },
     // 下拉刷新
     async refresh () {
+      await this.$sleep() // 同步代码  定时器500ms之后执行下面的
       const res = await getArticleList({
         channel_id: this.channel_id, // 把当前的频道id赋值给channel_id
         timestamp: Date.now() // 因为是下拉刷新  所以时间戳是当前的时间戳
       })
       this.downLoading = false // 一刷新 就会自动改成true  所以需要手动改回来false
-      console.log(res)
+      //   console.log(res)
       if (res.results.length) { // 如果有数据的分支
         this.articleList = res.results// 刷新是把全部的articleList替换掉
         if (res.pre_timestamp) { // 如果返回的数据中存在时间戳  就把获取的时间戳给了timestamp
