@@ -2,11 +2,8 @@
   <div class="container">
     <van-tabs>
       <van-tab v-for="item in 10" :key="item" :title="`标签${item}`">
-        <div class="scroll-wrapper">
-          <van-cell-group>
-            <van-cell title="单元格" value="内容" v-for="item in 100" :key="item" />
-          </van-cell-group>
-        </div>
+        <!-- 这里是自己定义的一个新组建  因为这个组件里面是文章的列表 -->
+        <articleList></articleList>
       </van-tab>
     </van-tabs>
     <div class="bar_btn">
@@ -17,8 +14,12 @@
 </template>
 
 <script>
+import articleList from './components/articleList'
 export default {
-  name: 'home' // devtools查看组件时  可以看到 对应的name名称
+  name: 'home', // devtools查看组件时  可以看到 对应的name名称
+  components: {
+    articleList
+  }
 }
 </script>
 
