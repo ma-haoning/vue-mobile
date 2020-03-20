@@ -82,7 +82,7 @@ export default {
       if (res.results.length) { // 如果有数据的分支
         this.articleList = res.results// 刷新是把全部的articleList替换掉
         if (res.pre_timestamp) { // 如果返回的数据中存在时间戳  就把获取的时间戳给了timestamp
-          this.finished = false // 上拉加载的时候 如果拖到最后的数据  finished就已经是true啦  此刻刷新了页面还是true  所以需要把finished改成false  如果再次去上拉加载的话  当前刷新的页面总会获取完 获取完依然会把finished改成true
+          this.finished = false // 上拉加载的时候 如果拖到最后的数据  finished就已经是true啦  此刻刷新了页面还是true  所以需要把finished改成false  如果再次去上拉加载的话  当前刷新的页面总会获取完 获取完依然会把finished改成true  注意 :考虑拖到底部之后没数据之后再刷新的操作
           this.timestamp = res.pre_timestamp
         }
         this.successText = `更新了${res.results.length}条数据`
