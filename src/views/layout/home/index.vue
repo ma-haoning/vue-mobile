@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <van-tabs>
+    <van-tabs v-model="activeIndex">
       <van-tab v-for="item in channels" :key="item.id" :title="item.name">
         <!-- 这里是自己定义的一个新组建  因为这个组件里面是文章的列表 -->
         <!-- 用父组件给子组件传值的方式给子组件把id传过去 因为子组件发送请求需要id -->
@@ -16,7 +16,8 @@
     <!-- round是van-action-sheet的一个属性 默认是true false就是取消圆角  当然必须加上: 如果不加就是字符串 -->
     <van-action-sheet v-model="show" title="编辑频道" :round="false">
       <!-- 父组件给子组件传值 通过props :channesl是要传过去的变量 等号后面是当前组件的变量 -->
-      <channelsEdit :channels='channels'></channelsEdit>
+      <!-- 通过$emit传过来值之后  写他的方法  这个方法就是当前组件的方法  接收传过来的值 -->
+      <channelsEdit :channels='channels' @selectedChannel='selectedChannel'></channelsEdit>
     </van-action-sheet>
 
   </div>
@@ -35,7 +36,8 @@ export default {
     return {
       // 设置一个空数组 当请求发送成功之后  把从后台获取到的数据给了当前的channels
       channels: [],
-      show: false // 这个是频道编辑组件的  默认显示状态  false是隐藏  当点击对应的图标 true赋值给v-model
+      show: false, // 这个是频道编辑组件的  默认显示状态  false是隐藏  当点击对应的图标 true赋值给v-model
+      activeIndex: 0 // tabs默认的是0这个下标
     }
   },
   methods: {
@@ -45,6 +47,13 @@ export default {
       const res = await getChannels()
       // console.log(res)
       this.channels = res.channels
+    },
+    // 这个是自定义事件 子组件给父组件传值的方法
+    selectedChannel (id) {
+      // 子组件中传过来的id和当前父组件的item.id如果一样的话 说明就是要找的下标 然后让这个下标赋值给tabs的activeIndex
+      const index = this.channels.findIndex((item) => item.id === id)
+      this.activeIndex = index // 这就可以得到  点击编辑频道的内部的任意频道 回到父组件的对应的tabs栏
+      this.show = false // 关闭遮罩层
     }
   },
   // 钩子函数
