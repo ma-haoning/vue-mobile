@@ -17,7 +17,8 @@
     <van-action-sheet v-model="show" title="编辑频道" :round="false">
       <!-- 父组件给子组件传值 通过props :channesl是要传过去的变量 等号后面是当前组件的变量 -->
       <!-- 通过$emit传过来值之后  写他的方法  这个方法就是当前组件的方法  接收传过来的值 -->
-      <channelsEdit :channels='channels' @selectedChannel='selectedChannel'></channelsEdit>
+      <!-- 需求:父组件给子组件传值  通过props 既然父组件的频道和子组件的频道是传递过去的并且一模一样  还可以通过props对当前父组件的tab栏的索引传给子组件的索引  让子组件的索引高亮-->
+      <channelsEdit :channels='channels' @selectedChannel='selectedChannel' :activeIndex='activeIndex'></channelsEdit>
     </van-action-sheet>
 
   </div>

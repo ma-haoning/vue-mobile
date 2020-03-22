@@ -14,8 +14,8 @@
           <!-- 这里得到了父组件给的频道数组  可以对频道数组进行遍历 -->
         <van-grid-item v-for="(item,index) in channels" :key="item.id">
             <!-- 可以在事件中直接写逻辑  子组件给父组件传值  监听谁就在谁的 -->
-            <!-- 因为子组件的频道是由父组件通过props传值过来的  点击当前的index 传给父组件之后 找对应的index即可 -->
-          <span class="f12" @click="$emit('selectedChannel',item.id)">{{item.name}}</span>
+            <!-- 因为子组件的频道是由父组件通过props传值过来的  点击当前的index 传给父组件之后 找对应的index即可   :class是一个变量 '{red:boolean}' 如果Boolean是true 说明red这个class显示  如果是false就是不显示这个class 如果父组件中传过来的索引和当前子组件的索引一样 说明就是高亮显示-->
+          <span class="f12" @click="$emit('selectedChannel',item.id)" :class="{red:index===activeIndex}">{{item.name}}</span>
           <!-- X号之所以会出来  是因为editing为true 并且要求 推荐 频道不能出现X号 推荐 频道的索引还是第0个   所以 当  index！==0 && editing 的时候 同时为true 当前的X号才会显示   -->
           <van-icon class="btn" name="cross" v-if="index!==0 && editing"></van-icon>
         </van-grid-item>
@@ -48,6 +48,11 @@ export default {
       required: true, // 必填项
       type: Array, // 类型是数组
       default: () => [] // 默认值是一个函数  返回的是数组  如果这里只是写[]  vscode就会报错  必须是一个函数  这里用箭头函数  return 就可以省略  返回一个数组的函数
+    },
+    activeIndex: {
+      required: true, // 必填项
+      type: Number, // 类型
+      default: null // 默认值
     }
   },
   methods: {
