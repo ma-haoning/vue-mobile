@@ -22,8 +22,8 @@
     <div class="channel">
       <div class="tit">可选频道：</div>
       <van-grid class="van-hairline--left">
-        <van-grid-item v-for="index in 8" :key="index">
-          <span class="f12">频道{{index}}</span>
+        <van-grid-item v-for="item in optionalChannels" :key="item.id">
+          <span class="f12">{{item.name}}</span>
           <van-icon class="btn" name="plus"></van-icon>
         </van-grid-item>
       </van-grid>
@@ -32,10 +32,12 @@
 </template>
 
 <script>
+import { getAllChannels } from '@/api/channel' // 引入全部频道的请求
 export default {
   data () {
     return {
-      editing: false
+      editing: false, // 这个是显示和隐藏的默认值
+      allChannels: [] // 全部频道的数据 先定义一个空数组 获取请求结束 把获取的结果赋值给当前的空数组  然后渲染即可
     }
   },
   props: {
@@ -44,6 +46,28 @@ export default {
       required: true, // 必填项
       type: Array, // 类型是数组
       default: () => [] // 默认值是一个函数  返回的是数组  如果这里只是写[]  vscode就会报错  必须是一个函数  这里用箭头函数  return 就可以省略  返回一个数组的函数
+    }
+  },
+  methods: {
+    // 这个函数只是当前Vue实例的一个方法 虽然和引入的获取全部频道的请求的方法一样  当时二者有本质的区别
+    async getAllChannels () {
+      const res = await getAllChannels()
+      console.log(res)
+      this.allChannels = res.channels // 把接口获取到的全部数据赋值给空数组
+    }
+  },
+  // 钩子函数 当Vue实例结束自动执行
+  created () {
+    // Vue实例结束 直接获取全部频道的数据
+    this.getAllChannels()
+  },
+  computed: { // 在计算属性中对全部频道进行筛选成可选频道
+    // 业务需求 可选频道中不能包括你已经选择的频道  可选频道是除了已经选择的频道之外的频道 在全部频道中减去已经选择了的频道
+    // 运用数组的filter和some方法就行筛选
+    // 计算属性内部都是方法 必须有返回值 return
+    optionalChannels () {
+      // some这个方法返回的是boolean值 在通过filter对布尔值进行筛选就是真实的数据
+      return this.allChannels.filter(item => !this.channels.some(o => o.id === item.id))
     }
   }
 }
