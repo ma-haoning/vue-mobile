@@ -18,14 +18,14 @@
       <!-- 父组件给子组件传值 通过props :channesl是要传过去的变量 等号后面是当前组件的变量 -->
       <!-- 通过$emit传过来值之后  写他的方法  这个方法就是当前组件的方法  接收传过来的值 -->
       <!-- 需求:父组件给子组件传值  通过props 既然父组件的频道和子组件的频道是传递过去的并且一模一样  还可以通过props对当前父组件的tab栏的索引传给子组件的索引  让子组件的索引高亮-->
-      <channelsEdit :channels='channels' @selectedChannel='selectedChannel' :activeIndex='activeIndex'></channelsEdit>
+      <channelsEdit :channels='channels' @selectedChannel='selectedChannel' :activeIndex='activeIndex' @delChannel='delChannel'></channelsEdit>
     </van-action-sheet>
 
   </div>
 </template>
 
 <script>
-import { getChannels } from '@/api/channel' // 引入获取用户频道列表的axios的请求
+import { getChannels, delChannel } from '@/api/channel' // 引入获取用户频道列表的axios的请求
 import articleList from './components/articleList' // 这个是文章列表的组件
 import channelsEdit from './components/channelsEdit'
 export default {
@@ -55,6 +55,20 @@ export default {
       const index = this.channels.findIndex((item) => item.id === id)
       this.activeIndex = index // 这就可以得到  点击编辑频道的内部的任意频道 回到父组件的对应的tabs栏
       this.show = false // 关闭遮罩层
+    },
+    // 删除频道
+    async delChannel (id) {
+      // alert(id)
+      try {
+        await delChannel(id)// 从浏览器缓存中删除成功
+        const index = this.channels.findIndex(item => item.id === id)
+        if (index <= this.activeIndex) {
+          this.activeIndex = this.activeIndex - 1
+        }
+        this.channels.splice(index, 1)
+      } catch {
+        this.$notify({ message: '删除频道失败' })
+      }
     }
   },
   // 钩子函数

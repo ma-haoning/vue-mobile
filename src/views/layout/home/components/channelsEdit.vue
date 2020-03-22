@@ -17,7 +17,7 @@
             <!-- 因为子组件的频道是由父组件通过props传值过来的  点击当前的index 传给父组件之后 找对应的index即可   :class是一个变量 '{red:boolean}' 如果Boolean是true 说明red这个class显示  如果是false就是不显示这个class 如果父组件中传过来的索引和当前子组件的索引一样 说明就是高亮显示-->
           <span class="f12" @click="$emit('selectedChannel',item.id)" :class="{red:index===activeIndex}">{{item.name}}</span>
           <!-- X号之所以会出来  是因为editing为true 并且要求 推荐 频道不能出现X号 推荐 频道的索引还是第0个   所以 当  index！==0 && editing 的时候 同时为true 当前的X号才会显示   -->
-          <van-icon class="btn" name="cross" v-if="index!==0 && editing"></van-icon>
+          <van-icon class="btn" name="cross" v-if="index!==0 && editing" @click="$emit('delChannel',item.id)"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>

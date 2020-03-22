@@ -38,12 +38,12 @@ export function delChannel (id) {
     // 先判断
     const key = store.state.user.token ? user : tourist
     // 这里不可能为空 因为呢当你第一次获取页面的时候不管你是用户还是游客都会把默认的频道数据加载到你的浏览器缓存中  在本地存储中知道当前用户或者游客的频道数据  先转化正常的数组
-    const channel = JSON.parse(window.localStorage.get(key))
+    const channels = JSON.parse(window.localStorage.getItem(key))
     // 根据id找到索引 然后对数组进行splice
-    const index = channel.findIndex(item => item.id === id)
+    const index = channels.findIndex(item => item.id === id)
     if (index > -1) {
-      const newChannels = channel.splice(index, 1)// 把这个新的数组再次存储到浏览器的本地缓存中
-      window.localStorage.setItem(key, JSON.stringify(newChannels))
+      channels.splice(index, 1)// 把这个新的数组再次存储到浏览器的本地缓存中
+      window.localStorage.setItem(key, JSON.stringify(channels))
       resolve()
     } else {
       reject(new Error('该频道不存在'))
