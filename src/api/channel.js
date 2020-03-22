@@ -50,3 +50,17 @@ export function delChannel (id) {
     }
   })
 }
+
+// 添加浏览器本地缓存的频道数据
+export function addChannel (channel) {
+  return new Promise(function (resolve, reject) {
+    // 先判断
+    const key = store.state.user.token ? user : tourist
+    // 这里不可能为空 因为呢当你第一次获取页面的时候不管你是用户还是游客都会把默认的频道数据加载到你的浏览器缓存中  在本地存储中知道当前用户或者游客的频道数据  先转化正常的数组
+    const channels = JSON.parse(window.localStorage.getItem(key))
+    // 从后添加数据
+    channels.push(channel)
+    window.localStorage.setItem(key, JSON.stringify(channels))
+    resolve()
+  })
+}

@@ -26,7 +26,8 @@
       <van-grid class="van-hairline--left">
         <van-grid-item v-for="item in optionalChannels" :key="item.id">
           <span class="f12">{{item.name}}</span>
-          <van-icon class="btn" name="plus"></van-icon>
+          <!-- 子传父 自定义事件 -->
+          <van-icon class="btn" name="plus" @click="$emit('addChannel',item)"></van-icon>
         </van-grid-item>
       </van-grid>
     </div>

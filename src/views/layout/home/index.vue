@@ -18,14 +18,14 @@
       <!-- 父组件给子组件传值 通过props :channesl是要传过去的变量 等号后面是当前组件的变量 -->
       <!-- 通过$emit传过来值之后  写他的方法  这个方法就是当前组件的方法  接收传过来的值 -->
       <!-- 需求:父组件给子组件传值  通过props 既然父组件的频道和子组件的频道是传递过去的并且一模一样  还可以通过props对当前父组件的tab栏的索引传给子组件的索引  让子组件的索引高亮-->
-      <channelsEdit :channels='channels' @selectedChannel='selectedChannel' :activeIndex='activeIndex' @delChannel='delChannel'></channelsEdit>
+      <channelsEdit :channels='channels' @selectedChannel='selectedChannel' :activeIndex='activeIndex' @delChannel='delChannel' @addChannel='addChannel'></channelsEdit>
     </van-action-sheet>
 
   </div>
 </template>
 
 <script>
-import { getChannels, delChannel } from '@/api/channel' // 引入获取用户频道列表的axios的请求
+import { getChannels, delChannel, addChannel } from '@/api/channel' // 引入获取用户频道列表的axios的请求
 import articleList from './components/articleList' // 这个是文章列表的组件
 import channelsEdit from './components/channelsEdit'
 export default {
@@ -69,6 +69,11 @@ export default {
       } catch {
         this.$notify({ message: '删除频道失败' })
       }
+    },
+    // 添加频道
+    async addChannel (channel) {
+      await addChannel(channel)// 浏览器本地存储
+      this.channels.push(channel)// 父组件通过props传值给子组件给父组件传值就是给子组件传值  二者是一样的
     }
   },
   // 钩子函数
