@@ -15,7 +15,8 @@
     <!-- 当前必须有一个遮罩层 van-action-sheet  绑定v-model就是  让当前的蓶false  只要一点击就把true赋值给v-model  他就会显示啦  -->
     <!-- round是van-action-sheet的一个属性 默认是true false就是取消圆角  当然必须加上: 如果不加就是字符串 -->
     <van-action-sheet v-model="show" title="编辑频道" :round="false">
-      <channelsEdit></channelsEdit>
+      <!-- 父组件给子组件传值 通过props :channesl是要传过去的变量 等号后面是当前组件的变量 -->
+      <channelsEdit :channels='channels'></channelsEdit>
     </van-action-sheet>
 
   </div>
