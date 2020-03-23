@@ -74,7 +74,7 @@ export default {
     // 运用数组的filter和some方法就行筛选
     // 计算属性内部都是方法 必须有返回值 return
     optionalChannels () {
-      // some这个方法返回的是boolean值 在通过filter对布尔值进行筛选就是真实的数据
+      // some这个方法返回的是boolean值 在通过filter对布尔值进行筛选就是真实的数据 filter和some结合使用有不同的效果
       return this.allChannels.filter(item => !this.channels.some(o => o.id === item.id))
     }
   }
