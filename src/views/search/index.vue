@@ -6,7 +6,7 @@
     <van-search  placeholder="请输入搜索关键词" shape="round"  v-model.trim="q" @search="onSearch" />
     <!-- 搜索框内绑定v-model 只要搜索框内有内容 就会显示搜索的数据 而历史记录就会隐藏  只要搜索框内内容没了   搜索的数据就会隐藏  而历史记录就会显示  二者相反 这个就是业务需求 -->
     <van-cell-group class="suggest-box" v-if="q">
-      <van-cell icon="search" v-for="item in suggestions" :key="item">
+      <van-cell icon="search" v-for="item in suggestions" :key="item" @click="toResult(item)">
         <span>{{item}}</span>
       </van-cell>
     </van-cell-group>
@@ -60,6 +60,9 @@ export default {
     },
     // 点击历史记录中的单元格调转到对应的结果组件
     toResult (text) {
+      this.historyList.push(text) // 把当前的的内容添加到历史记录的数组中
+      window.localStorage.setItem(key, JSON.stringify(Array.from(new Set(this.historyList))))// 对新添加的数组元素去重  去重之后就是一个伪数组  通过Array.from强制转为数组 在通过stringify存储到本地
+      // 点击搜索调转到对应的组件
       this.$router.push({ path: '/searchResult', query: { q: text } })
     },
     // 清空所有的历史记录

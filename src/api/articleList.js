@@ -18,3 +18,11 @@ export function auto (params) {
     params
   })
 }
+
+// 搜索文章的请求
+export function searchArticles (params) {
+  return request({
+    url: '/search',
+    params
+  })
+}
