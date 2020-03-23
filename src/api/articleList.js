@@ -10,3 +10,11 @@ export function getArticleList (params) {
     }
   })
 }
+
+// 在搜索框内输入文本 联想数据
+export function auto (params) {
+  return request({
+    url: '/suggestion',
+    params
+  })
+}
