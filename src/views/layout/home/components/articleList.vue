@@ -2,7 +2,9 @@
   <div class="scroll-wrapper">
     <van-pull-refresh v-model="downLoading" :success-text="successText" @refresh='refresh'>
         <van-list v-model="upLoading" :finished="finished" :finished-text="finishedText" @load="getArticleList">
-      <div class="article_item" v-for="item in articleList" :key="item.art_id.toString()">
+     <van-cell-group>
+       <van-cell  v-for="item in articleList" :key="item.art_id.toString()">
+          <div class="article_item">
         <h3 class="van-ellipsis">{{item.title}}</h3>
         <!-- 三图 -->
         <!-- 如果type===3 就显示 不等于3就隐藏 -->
@@ -17,14 +19,16 @@
           <van-image class="w100" fit="cover" :src="item.cover.images[0]" />
         </div>
         <div class="info_box">
-          <span>{{item.aut_name}}</span>
-          <span>{{item.comm_count}}</span>
-          <span>{{item.pubdate}}</span>
+          <span>作者:{{item.aut_name}}</span>
+          <span>{{item.comm_count}}条评论</span>
+          <span>{{item.pubdate|relativeTimer}}</span>
           <span class="close">
             <van-icon name="cross"></van-icon>
           </span>
         </div>
       </div>
+       </van-cell>
+     </van-cell-group>
     </van-list>
     </van-pull-refresh>
   </div>

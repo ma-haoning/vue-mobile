@@ -16,9 +16,9 @@
                 <van-image class="w100" fit="cover" :src="item.cover.images[0]" />
               </div>
               <div class="info_box">
-                <span>{{item.aut_name}}</span>
-                <span>{{item.comm_count}}</span>
-                <span>{{item.pubdate}}</span>
+                <span>作者:{{item.aut_name}}</span>
+                <span>{{item.comm_count}}条评论</span>
+                <span>{{item.pubdate|relativeTimer}}</span>
               </div>
             </div>
           </van-cell>

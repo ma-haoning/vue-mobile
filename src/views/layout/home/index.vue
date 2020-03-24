@@ -103,11 +103,11 @@ export default {
   /deep/ .van-tabs__content{
     flex: 1;
     overflow: hidden;
-    padding-left:15px;
-    // margin-right:25px;
-    .article_item .info_box span.close[data-v-9ad410c0]{
-      right: 15px;
-    }
+    // // padding-left:15px;
+    // // // margin-right:25px;
+    // // .article_item .info_box span.close[data-v-9ad410c0]{
+    // //   right: 15px;
+    // }
   }
   /deep/ .van-tab__pane{
     height: 100%;
