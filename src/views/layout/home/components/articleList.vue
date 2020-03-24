@@ -3,7 +3,7 @@
     <van-pull-refresh v-model="downLoading" :success-text="successText" @refresh='refresh'>
         <van-list v-model="upLoading" :finished="finished" :finished-text="finishedText" @load="getArticleList">
      <van-cell-group>
-       <van-cell  v-for="item in articleList" :key="item.art_id.toString()">
+       <van-cell  v-for="item in articleList" :key="item.art_id.toString()" :to="`/article?articleId=${item.art_id.toString()}`">
           <div class="article_item">
         <h3 class="van-ellipsis">{{item.title}}</h3>
         <!-- 三图 -->

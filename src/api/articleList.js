@@ -26,3 +26,10 @@ export function searchArticles (params) {
     params
   })
 }
+
+// 获取文章详情的请求
+export function articleInfo (articleId) {
+  return request({
+    url: `/articles/${articleId}`
+  })
+}

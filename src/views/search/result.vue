@@ -4,7 +4,7 @@
       <!-- load这个方法 在初始化会自动调用一次   -->
       <van-list v-model="upLoading" :finished="finished" @load="onLoad" finished-text="没有更多啦">
         <van-cell-group>
-          <van-cell v-for="item in articles" :key="item.art_id">
+          <van-cell v-for="item in articles" :key="item.art_id.toString()" :to="`/article?articleId=${item.art_id.toString()}`">
             <div class="article_item">
               <h3 class="van-ellipsis">{{item.title}}</h3>
               <div class="img_box" v-if="item.cover.type===3">
@@ -47,7 +47,7 @@ export default {
       // 此时的变量必须是q  因为后台要求是q
       const { q } = this.$route.query// 先得到当前查询参数
       const res = await searchArticles({ ...this.page, q })
-      console.log(res)
+      // console.log(res)
       this.articles.push(...res.results)// 如果直接赋值  那么就是直接代替了  这个只是从后面添加数组
       this.upLoading = false// 手动关闭圈圈
       if (res.results.length < 10) {
