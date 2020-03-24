@@ -24,6 +24,7 @@
           :class="{active:article.attitude===0}"
         >不喜欢</van-button>
       </div>
+      <comment />
     </div>
     <!-- 遮罩层 -->
     <van-overlay :show='show' class-name="color">
@@ -35,8 +36,12 @@
 <script>
 import { articleInfo } from '@/api/articleList' // 引入获取文章详情的请求
 import { followUser, unFollowUser } from '@/api/user' // 引入关注和取消关注的请求
+import comment from './components/comment' // 引入评论组件
 export default {
   // name: 'article'
+  components: {
+    comment
+  },
   data () {
     return {
       article: {}, // 定义文章的空对象 请求结束接收数据 后台回来的数据就是对象  所以得设置对象
@@ -108,7 +113,7 @@ export default {
   .author {
     padding: 10px 0;
     display: flex;
-    position: sticky;
+    // position: sticky;
     background-color: #fff;
     top: 46px;
     .text {

@@ -33,3 +33,11 @@ export function articleInfo (articleId) {
     url: `/articles/${articleId}`
   })
 }
+
+// 获取文章评论和回复的请求
+export function commentAndReply (params) {
+  return request({
+    url: '/comments',
+    params
+  })
+}
