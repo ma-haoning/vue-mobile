@@ -10,7 +10,7 @@
           <p class="time">{{article.pubdate|relativeTimer}}</p>
         </div>
         <!-- 如果返回来的是true 说明已经关注了 页面上显示应该是取消关注;如果返回来的是false  说明没有关注  页面上应该显示 + 关注 -->
-        <van-button round size="small" type="info">{{article.is_followed?'取消关注':'+ 关注'}}</van-button>
+        <van-button round size="small" :loading="btn_loading" type="info" @click="followAndUnfollow">{{article.is_followed?'取消关注':'+ 关注'}}</van-button>
       </div>
       <!-- 因为后台传过来的文章的内容数据有可能是html版的  所以 -->
       <div class="content" v-html="article.content"></div>
@@ -27,19 +27,21 @@
     </div>
     <!-- 遮罩层 -->
     <van-overlay :show='show' class-name="color">
-      <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center"><van-loading type="spinner" color="skyblue"/>主人,请稍等...</div>
+      <div style="width:100%;height:100%;display:flex;justify-content:center;align-items:center"><van-loading type="spinner" color="skyblue"/>亲爱哒,请稍等...</div>
     </van-overlay>
   </div>
 </template>
 
 <script>
 import { articleInfo } from '@/api/articleList' // 引入获取文章详情的请求
+import { followUser, unFollowUser } from '@/api/user' // 引入关注和取消关注的请求
 export default {
   // name: 'article'
   data () {
     return {
       article: {}, // 定义文章的空对象 请求结束接收数据 后台回来的数据就是对象  所以得设置对象
-      show: true// 遮罩层的默认值
+      show: true, // 遮罩层的默认值
+      btn_loading: false// 关注按钮的默认值
     }
   },
   methods: {
@@ -52,6 +54,24 @@ export default {
       this.article = await articleInfo(articleId)
       // console.log(this.article)
       this.show = false// 请求后关闭遮罩
+    },
+    // 关注或者取消关注
+    async followAndUnfollow () {
+      // 点击按钮之后就让loading蓶true
+      this.btn_loading = true
+      await this.$sleep()
+      try {
+        if (this.article.is_followed) { // 如果是true 是关注状态 那么就要去发送取消关注的请求
+          await unFollowUser(this.article.aut_id.toString())
+        } else { // 如果是false 是取消关注状态 那么就要去发送关注的请求
+          await followUser({ target: this.article.aut_id })
+        }
+        this.article.is_followed = !this.article.is_followed// 只要进try分支 不管是if还是else 都会对当前的状态取反
+      } catch (error) {
+        this.$notify({ message: '操作失败', duration: 500 })
+      } finally {
+        this.btn_loading = false// 不管请求成功也好失败也好 在最后 把按钮加载为false
+      }
     }
   },
   // 实例创建结束就执行

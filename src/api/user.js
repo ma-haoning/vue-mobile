@@ -7,3 +7,20 @@ export function login (data) {
     data// 请求的参数  es6的写法  只写变量
   })
 }
+
+// 关注用户的请求
+export function followUser (data) {
+  return request({
+    url: '/user/followings',
+    method: 'post',
+    data// 关注用户的id
+  })
+}
+
+// 取消关注用户的请求
+export function unFollowUser (id) {
+  return request({
+    url: `/user/followings/${id}`,
+    method: 'delete'
+  })
+}
