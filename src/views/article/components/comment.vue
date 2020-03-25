@@ -42,7 +42,7 @@
     <div class="reply-container van-hairline--top">
       <van-field v-model="value" placeholder="写评论...">
         <van-loading v-if="submiting" slot="button" type="spinner" size="16px"></van-loading>
-        <span class="submit" v-else slot="button">提交</span>
+        <span class="submit" v-else slot="button">评论</span>
       </van-field>
     </div>
   </div>
@@ -84,7 +84,7 @@ export default {
         source: articleId, // 当前文章的id
         offset: this.offset// 这个是必填的参数
       })
-      //   console.log(res)
+      // console.log(res)
       this.comment.push(...res.results)
       this.loading = false// 手动关闭加载状态
       this.finished = res.end_id === res.last_id// 如果当前的获取数据的最后一个id===整个评论列表的id 那么就意味着加载结束了
@@ -110,7 +110,7 @@ export default {
         source: this.reply.commentId, // 这个是当前评论的id
         offset: this.reply.offset
       })
-      console.log(res)
+      // console.log(res)
       this.reply.list.push(...res.results)// 把得到的数据赋值给list
       this.reply.loading = false// 手动关闭加载状态
       this.reply.finished = res.end_id === res.last_id// 如果二者想等说明加载结束
