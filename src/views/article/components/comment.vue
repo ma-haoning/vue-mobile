@@ -27,7 +27,8 @@
       </div>
     </van-list>
         <!-- 回复 -->
-    <van-action-sheet v-model="showReply" :round="false" class="reply_dialog" title="回复评论">
+    <van-action-sheet v-model="showReply" :round="false" class="reply_dialog" title="回复评论" @closed='reply.commentId=null'>
+      <!-- 当关闭回复弹框的时候 把当前回复评论的id置空  因为添加评论的时候会以当前的回复id为参数 如果不置空 则会影响请求的参数 -->
       <van-list v-model="reply.loading" :finished="reply.finished" finished-text="没有更多了" @load="onloadd" :immediate-check="false">
         <div class="item van-hairline--bottom van-hairline--top" v-for="item in reply.list" :key="item.com_id.toString()">
           <van-image round width="1rem" height="1rem" fit="fill" :src="item.aut_photo" />
@@ -42,7 +43,7 @@
     <div class="reply-container van-hairline--top">
       <van-field v-model="value" placeholder="写评论...">
         <van-loading v-if="submiting" slot="button" type="spinner" size="16px"></van-loading>
-        <span class="submit" v-else slot="button">评论</span>
+        <span class="submit" v-else slot="button" @click="submit">评论</span>
       </van-field>
     </div>
   </div>
@@ -51,7 +52,7 @@
 </template>
 
 <script>
-import { commentAndReply } from '@/api/articleList'
+import { commentAndReply, subComments } from '@/api/articleList'
 export default {
   data () {
     return {
@@ -116,6 +117,53 @@ export default {
       this.reply.finished = res.end_id === res.last_id// 如果二者想等说明加载结束
       if (!this.reply.finished) { // 如果没有加载完毕
         this.reply.offset = res.last_id// 把这个请求的最后一个回复的值给了offset  改变下次请求的参数
+      }
+    },
+    async submit () {
+      // alert(2)
+      if (this.$store.state.user.token) {
+        // alert(2)//如果已经是登录状态先判断你输入的内容是否为空 是空 就直接return  不在往下执行
+        if (!this.value) return false
+        // 如果不为空 则输入完毕发送请求
+        // 先把加载状态打开
+        this.submiting = true
+        await this.$sleep()// 开始延迟函数
+        try { // 如果成功
+          // alert(222)
+          const res = await subComments({
+          // 第一个请求参数是 如果当前的回复id存在则说明是回复的id 如果不存在则是文章的id
+            target: this.reply.commentId ? this.reply.commentId : this.$route.query.articleId,
+            content: this.value,
+            art_id: this.reply.commentId ? this.$route.query.articleId : null
+          })
+          console.log(res)
+          if (this.reply.commentId) { // 当前存在说明是对回复进行评论
+            // alert(1)
+            this.reply.list.unshift(res.new_obj)// 当当前的回复id存在的时候虽然已经可以添加了  但是评论文章的数组的回复值也应该对应的增长
+            const aa = this.comment.find(item => item.com_id.toString() === this.reply.commentId)
+            aa && aa.reply_count++// 如果当前的回复id和data数据中的comment的评论id一样的话  找到他 让他下面的回复值加1
+          } else { // 不存在说明是对文章进行评论
+            // alert(2)
+            this.comment.unshift(res.new_obj)// 从前添加
+          }
+          this.value = ''
+        } catch (error) { // 如果失败
+          this.$notify({ duration: 800, message: '评论失败' })
+        }
+        // 不管评论失败成功都要关闭加载
+        this.submiting = false
+      } else {
+        // alert(222)
+        // 如果没有登录 则友好的提醒一下
+        try {
+          await this.$dialog.confirm({
+            message: '如果想要评论,则需要登录'
+          })
+          // 这里的redirectUrl是根据登录页面的数据而来 登录的时候会判断redirectUrl是否存在 存在的话 就会跳转到历史画面 不存在则去主页
+          this.$router.push({ path: '/login', query: { redirectUrl: this.$route.fullPath } })
+        } catch (error) {
+
+        }
       }
     }
   }

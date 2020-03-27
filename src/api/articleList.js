@@ -41,3 +41,12 @@ export function commentAndReply (params) {
     params
   })
 }
+
+// 添加文章评论或者回复的请求
+export function subComments (data) {
+  return request({
+    url: '/comments',
+    method: 'post',
+    data
+  })
+}
