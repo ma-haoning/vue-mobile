@@ -38,3 +38,26 @@ export function getUserInfo () {
     url: '/user/profile'
   })
 }
+
+/****
+ * 修改用户头像
+ * ****/
+export function updatePhoto (data) {
+  return request({
+    url: '/user/photo',
+    method: 'patch',
+    data // body参数
+  })
+}
+
+/******
+ *  保存用户信息
+ *
+ * **/
+export function saveUserInfo (data) {
+  return request({
+    url: '/user/profile',
+    method: 'patch',
+    data: { ...data, photo: null } // 直接将photo设置为空
+  })
+}

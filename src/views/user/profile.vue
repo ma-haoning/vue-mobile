@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <van-nav-bar left-arrow @click-left="$router.back()" title="编辑资料" right-text="保存" ></van-nav-bar>
+    <van-nav-bar left-arrow @click-left="$router.back()" title="编辑资料" right-text="保存"  @click-right="saveUser"></van-nav-bar>
     <van-cell-group>
       <van-cell is-link title="头像"  center @click="showPhoto=true">
         <van-image
@@ -23,7 +23,8 @@
       <!-- 内容 -->
       <!-- 1 本地相册选择图片 -->
       <!-- 2 拍照 -->
-       <van-cell is-link title="本地相册选择图片"></van-cell>
+       <input ref="myFile" @change="upload()" type="file" style="display:none">
+       <van-cell is-link title="本地相册选择图片" @click="openFileDialog"></van-cell>
        <van-cell is-link title="拍照"></van-cell>
     </van-popup>
 
@@ -53,7 +54,7 @@
 </template>
 
 <script>
-import { getUserInfo } from '@/api/user'
+import { getUserInfo, updatePhoto, saveUserInfo } from '@/api/user'
 import dayjs from 'dayjs'// 引入时间模块
 export default {
   name: 'profile',
@@ -105,6 +106,28 @@ export default {
     async getUserInfo () {
       this.user = await getUserInfo()
       console.log(this.user)
+    },
+    // 打开选择文件的对话框 触发点击input:file的动作
+    openFileDialog () {
+      this.$refs.myFile.click() // 触发input:file的click事件 触发事件就会弹出文件对话框
+    },
+    // 修改头像
+    async  upload () {
+      //  当选择 完头像之后 就可以修改头像
+      const data = new FormData()
+      data.append('photo', this.$refs.myFile.files[0]) // 第二个参数 是 选择的图片文件 选择图片文件
+      const result = await updatePhoto(data) // 上传头像
+      this.user.photo = result.photo // 把成功上传的头像地址设置给当前data中的数据
+      this.showPhoto = false // 关闭头像弹层
+    },
+    // 保存用户信息
+    async saveUser () {
+      try {
+        await saveUserInfo(this.user) // 传入user对象
+        this.$notify({ type: 'success', message: '保存成功', duration: 500 })
+      } catch (error) {
+        this.$notify({ message: '保存失败', duration: 500 })
+      }
     }
   },
   created () { // 实例结束获取用户的数据
