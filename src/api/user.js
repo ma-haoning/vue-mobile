@@ -24,3 +24,10 @@ export function unFollowUser (id) {
     method: 'delete'
   })
 }
+
+// 获取用户的个人资料
+export function getUserData () {
+  return request({
+    url: '/user'
+  })
+}
