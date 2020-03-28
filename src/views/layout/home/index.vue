@@ -46,7 +46,7 @@ export default {
     async getChannels () {
       // 用异步函数来执行同步代码
       const res = await getChannels()
-      // console.log(res)
+      console.log(res)
       this.channels = res.channels
     },
     // 这个是自定义事件 子组件给父组件传值的方法
