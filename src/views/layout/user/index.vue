@@ -37,28 +37,42 @@
     </van-row>
 
     <van-cell-group class="user-group">
-      <van-cell icon="edit" title="编辑资料" to="/user/profile" is-link />
-      <van-cell icon="chat-o" title="小智同学" to="/user/chat" is-link />
+      <van-cell icon="edit" title="编辑资料" to="/userProfile" is-link />
+      <van-cell icon="chat-o" title="小智同学" to="/userChat" is-link />
       <van-cell icon="setting-o" title="系统设置" is-link />
-      <van-cell icon="warning-o" title="退出登录" to="/login" is-link />
+      <van-cell icon="warning-o" title="退出登录" is-link @click="exit" />
     </van-cell-group>
   </div>
 </template>
 
 <script>
-import { getUserData } from '@/api/user'
+import { getUserData } from '@/api/user'// 引入获取个人资料的请求
+import { mapMutations } from 'vuex' // 引入vuex的修改
 export default {
-  name: 'user',
   data () {
     return {
+      // 用户的个人资料
       userInfo: {}
     }
   },
   methods: {
+    ...mapMutations(['delUser']),
     // 获取用户的个人资料数据
     async getUserData () {
       this.userInfo = await getUserData()
-      console.log(this.userInfo)
+      // console.log(this.userInfo)
+    },
+    exit () {
+      this.$dialog.confirm({
+        message: '您确定要退出登录吗？'
+      }).then(() => {
+        // debugger
+        window.localStorage.removeItem('user_channels')
+        this.delUser()// 清除本地缓存和token
+        this.$router.push('/login')
+      }).catch((error) => {
+        console.log(error)
+      })
     }
   },
   created () {

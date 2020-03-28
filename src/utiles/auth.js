@@ -9,5 +9,5 @@ export function getUser () { // 这个是获取token 需要parse转换一下
 }
 
 export function delUser () { // 删除token的函数
-  window.localStorage.removeItem('user_peove')
+  window.localStorage.removeItem('user_prove')
 }
